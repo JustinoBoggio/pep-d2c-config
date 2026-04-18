@@ -1,0 +1,5 @@
+apiVersion: v2
+name: pep-microservice
+description: Helm chart for workloads D2C microservices
+version: 1.0.0
+type: application

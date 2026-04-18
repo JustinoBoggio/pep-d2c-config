@@ -1,0 +1,10 @@
+replicaCount: 2
+
+service:
+  port: 80
+
+canary:
+  enabled: true
+  weight: 25
+  pauseDuration: 60s
+  errorThreshold: 0.05

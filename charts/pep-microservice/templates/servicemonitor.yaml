@@ -1,14 +1,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: checkout-api
+  name: {{ .Release.Name }}
   labels:
-    # kube-prometheus-stack uses this label to automatically discover ServiceMonitors
-    release: prometheus 
+    release: prometheus
 spec:
   selector:
     matchLabels:
-      app: checkout-api
+      app: {{ .Release.Name }}
   endpoints:
   - port: http
     path: /metrics

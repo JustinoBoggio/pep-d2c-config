@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ required "Error: image is required in values.yaml" .Values.image | quote }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+  
+  {{- if .Values.canary.enabled }}
+  strategy:
+    canary:
+      steps:
+      - setWeight: {{ .Values.canary.weight }}
+      - pause: { duration: {{ .Values.canary.pauseDuration }} }
+      - analysis:
+          templates:
+          - templateName: {{ .Release.Name }}-success-rate
+          args:
+          - name: service-name
+            value: {{ .Release.Name }}
+      - setWeight: 100
+  {{- end }}

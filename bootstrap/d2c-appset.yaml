@@ -32,6 +32,9 @@ spec:
         repoURL: https://github.com/JustinoBoggio/pep-d2c-config.git
         targetRevision: main
         path: '{{path}}'
+        helm:
+          valueFiles:
+            - values.yaml
       destination:
         server: '{{url}}' # Dynamic URL from the cluster generator
         namespace: '{{path.basename}}'
