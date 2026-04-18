@@ -19,7 +19,7 @@ spec:
         - containerPort: 9898
         env:
         - name: VERSION
-          value: "v2"
+          value: "v3"
   strategy:
     canary:
       steps:
