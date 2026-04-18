@@ -4,3 +4,17 @@ pep-microservice:
   service:
     port: 80
     targetPort: 9898
+
+externalSecrets:
+    enabled: true
+    secrets:
+      - name: "database"
+        keys:
+          - envVar: "DB_PASS"
+            remoteKey: "d2c-database-creds"
+            remoteProperty: "password"
+      - name: "stripe-api"
+        keys:
+          - envVar: "STRIPE_TOKEN"
+            remoteKey: "stripe-production-keys"
+            remoteProperty: "api_key"

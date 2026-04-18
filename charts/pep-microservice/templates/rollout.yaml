@@ -17,7 +17,13 @@ spec:
         image: {{ required "Error: image is required in values.yaml" .Values.image | quote }}
         ports:
         - containerPort: {{ .Values.service.targetPort }}
-  
+        {{- if .Values.externalSecrets.enabled }}
+        envFrom:
+        {{- range .Values.externalSecrets.secrets }}
+        - secretRef:
+            name: {{ $.Release.Name }}-{{ .name }}-secret
+        {{- end }}
+        {{- end }}
   {{- if .Values.canary.enabled }}
   strategy:
     canary:

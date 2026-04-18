@@ -8,3 +8,8 @@ canary:
   weight: 25
   pauseDuration: 60s
   errorThreshold: 0.05
+
+externalSecrets:
+  enabled: false
+  storeName: "global-vault"
+  secrets: []
