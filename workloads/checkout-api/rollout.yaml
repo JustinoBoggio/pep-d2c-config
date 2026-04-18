@@ -19,12 +19,12 @@ spec:
         - containerPort: 9898
         env:
         - name: VERSION
-          value: "v3"
+          value: "v4"
   strategy:
     canary:
       steps:
       - setWeight: 25 # Send 25% of the traffic to the new version
-      - pause: {duration: 60s} # Wait 60s for Prometheus to gather metrics
+      - pause: {duration: 30s} # Wait 30s for Prometheus to gather metrics
       - analysis: # Trigger the query to Prometheus
           templates:
           - templateName: success-rate
