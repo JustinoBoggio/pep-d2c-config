@@ -1,18 +1,31 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: pepsico-d2c-services
+  name: pep-d2c-services-global
   namespace: argocd
 spec:
   generators:
-  - git:
-      repoURL: https://github.com/JustinoBoggio/pep-d2c-config.git
-      revision: main
-      directories:
-      - path: workloads/* # The scanner will look for any subfolder here
+  - matrix:
+      generators:
+      # Generator 1: where we deploy? (Clusters)
+      - list:
+          elements:
+          - cluster: us-east
+            url: https://kubernetes.default.svc # Ip of the US East cluster
+          - cluster: eu-west
+            url: https://kubernetes.default.svc # Ip of the EU West cluster
+
+      # Generator 2: what do we deploy? (Folders in Git)
+      - git:
+          repoURL: https://github.com/JustinoBoggio/pep-d2c-config.git
+          revision: main
+          directories:
+          - path: workloads/*
+
+  # Variables of both generators can be used in the template to create dynamic applications
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{path.basename}}-{{cluster}}'
     spec:
       project: default
       source:
@@ -20,7 +33,7 @@ spec:
         targetRevision: main
         path: '{{path}}'
       destination:
-        server: https://kubernetes.default.svc
+        server: '{{url}}' # Dynamic URL from the cluster generator
         namespace: '{{path.basename}}'
       syncPolicy:
         automated:
