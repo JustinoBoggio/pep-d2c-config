@@ -1,0 +1,21 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-latest-tag
+spec:
+  # Enforce means block the creation of resources that violate the policy. "Audit" would allow them but report a violation.
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: require-specific-tag
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "¡Policy of SRE: It is strictly prohibited to use the ':latest' tag in production!"
+      pattern:
+        spec:
+          containers:
+          - image: "!*:latest" # Fails if the image ends with ":latest"
