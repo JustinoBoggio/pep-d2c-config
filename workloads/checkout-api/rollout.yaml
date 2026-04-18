@@ -14,11 +14,9 @@ spec:
     spec:
       containers:
       - name: checkout-api
-        #image: argoproj/rollouts-demo:blue # test image that generates traffic
-        image: argoproj/rollouts-demo:yellow # test image that where we generate 500 errors
-        #image: argoproj/rollouts-demo:red # test image that generates traffic and some 500 errors
+        image: ghcr.io/stefanprodan/podinfo:6.2.2
         ports:
-        - containerPort: 8080
+        - containerPort: 9898
   strategy:
     canary:
       steps:
