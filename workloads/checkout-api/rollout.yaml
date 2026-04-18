@@ -14,15 +14,15 @@ spec:
     spec:
       containers:
       - name: checkout-api
-        image: argoproj/rollouts-demo:blue # test image that generates traffic
-        #image: argoproj/rollouts-demo:yellow # test image that where we generate 500 errors
+        #image: argoproj/rollouts-demo:blue # test image that generates traffic
+        image: argoproj/rollouts-demo:yellow # test image that where we generate 500 errors
         ports:
         - containerPort: 8080
   strategy:
     canary:
       steps:
       - setWeight: 25 # Send 25% of the traffic to the new version
-      - pause: {duration: 30s} # Wait 30s for Prometheus to gather metrics
+      - pause: {duration: 60s} # Wait 60s for Prometheus to gather metrics
       - analysis: # Trigger the query to Prometheus
           templates:
           - templateName: success-rate
