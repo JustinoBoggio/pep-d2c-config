@@ -1,6 +1,6 @@
 pep-microservice:
   replicaCount: 4
-  image: ghcr.io/stefanprodan/podinfo:6.2.2
+  #image: ghcr.io/stefanprodan/podinfo:6.2.2
   service:
     port: 80
     targetPort: 9898
