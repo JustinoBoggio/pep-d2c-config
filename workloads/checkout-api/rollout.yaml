@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: checkout-api
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: checkout-api
+  template:
+    metadata:
+      labels:
+        app: checkout-api
+    spec:
+      containers:
+      - name: checkout-api
+        image: argoproj/rollouts-demo:blue # test image that generates some 500 errors
+        ports:
+        - containerPort: 8080
+  strategy:
+    canary:
+      steps:
+      - setWeight: 25 # Send 25% of the traffic to the new version
+      - pause: {duration: 30s} # Wait 30s for Prometheus to gather metrics
+      - analysis: # Trigger the query to Prometheus
+          templates:
+          - templateName: success-rate
+          args:
+          - name: service-name
+            value: checkout-api
+      - setWeight: 100 # If Prometheus says OK, increase to 100%
